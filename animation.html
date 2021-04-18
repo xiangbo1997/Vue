@@ -1,13 +1,136 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/animate.css@3.5.1" rel="stylesheet" type="text/css">
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <title>Document</title>
 </head>
+
 <body>
-    
+    <div id="app">
+        <transition name="custom-classes-transition" :enter-active-class="enter"
+                :leave-active-class="leave">
+                <com-a v-if="show1"  :enter.sync="enter" :leave.sync="leave"></com-a>
+        </transition>
+        
+        <button @click="show1=!show1">flag</button>
+      
+
+        <div id="example-3">
+            <button @click="show = !show">
+                Toggle render
+            </button>
+            <transition name="custom-classes-transition" enter-active-class="animated tada"
+                leave-active-class="animated bounceOutRight">
+                <p v-if="show">hello</p>
+            </transition>
+        </div>
+    </div>
+    <script>
+        const comB = {
+            props: {
+                abc: {
+                    type: String,
+
+                },
+
+            },
+            template: `<p>test1{{abc}}</p>`,
+            created() {
+                console.log('son', 'created')
+            },
+            beforeCreate() {
+                console.log('son', 'beforecreate')
+            },
+            mounted() {
+                console.log('son', 'mounted')
+            },
+            beforeMount() {
+                console.log('son', 'beforemount')
+            },
+            beforeUpdate() {
+                console.log('son', 'beforeupdate')
+            },
+            updated() {
+                console.log('son', 'updated')
+            },
+            beforeDestroy() {
+                console.log('son', 'beforeDestroy')
+            },
+            destroyed() {
+                console.log('son', 'destroyed')
+            }
+        }
+        const comA = {
+            template: `<p>test<com-b :abc="abc"></com-b>  <button @click="abc='2345'">111</button></p>`,
+            props: {
+                enter: {
+                    type: String,
+                },
+                leave: {
+                    type: String,
+                }
+            },
+            created() {
+                console.log('father', 'created')
+                // this.enter = 'animated tada';
+                this.$emit('updated:enter', 'animated tada')
+            },
+            beforeCreate() {
+               
+                console.log('father', 'beforecreate')
+            },
+            mounted() {
+                console.log('father', 'mounted')
+            },
+            beforeMount() {
+                console.log('father', 'beforemount')
+            },
+            beforeUpdate() {
+                console.log('father', 'beforeupdate')
+            },
+            updated() {
+                console.log('father', 'updated')
+            },
+            beforeDestroy() {
+                // this.enter = 'nimated bounceOutRight'
+                this.$emit('updated:leave', 'animated bounceOutRight')
+                console.log('father', 'beforeDestroy')
+            },
+            destroyed() {
+                console.log('father', 'destroyed')
+            },
+            components: {
+                'com-b': comB,
+            },
+            data() {
+                return {
+                    abc: '123',
+                }
+            }
+
+        }
+        const vm = new Vue({
+            el: '#app',
+            data: {
+                show: true,
+                show1: true,
+                enter: '',
+                leave: '',
+                a: 'animated tada',
+                b: 'animated bounceOutRight',
+            },
+            components: {
+                'com-a': comA,
+            }
+
+        })
+    </script>
+
 </body>
+
 </html>
